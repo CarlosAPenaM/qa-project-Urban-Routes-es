@@ -5,10 +5,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 import data
 from selenium import webdriver
 from selenium.webdriver import Keys
-from locators import Locators
+import locators
 from UrbanRoute import UrbanRoutesPage
-
-
 
 class TestUrbanRoutes:
 
@@ -32,16 +30,18 @@ class TestUrbanRoutes:
 
     def test_click_pedir_un_taxi(self):
         self.routes_page.set_phone_number(data.phone_number)
+        comfort_icon = self.routes_page.get_comfort_rate().text
+        assert "comfort" in comfort_icon
 
-    def test_select_confort_rate(self):
+    def test_select_comfort_rate(self):
         self.routes_page.get_comfort_rate()
-
         comfort_text = "comfort"
         comfort_icon = self.routes_page.get_comfort_rate().text
         assert comfort_text in comfort_icon
 
     def test_set_phone_number(self):
-        self.routes_page.set_phone_number(data.phone_number)
+        value = self.routes_page.set_phone_number(data.phone_number)
+        assert data.phone_number == value
 
     def test_set_payment_method(self):
         self.routes_page.open_payment_method_popup()
@@ -59,10 +59,11 @@ class TestUrbanRoutes:
 
     def test_order_manta_y_panuelos(self):
         self.routes_page.set_manta_y_panuelos()
-        #assert routes_page.get_manta_y_panuelos().get_property('checked')
+        assert self.routes_page.get_manta_y_panuelos().get_property('checked')
 
     def test_order_dos_helados(self):
         self.routes_page.set_icecream()
+        assert locators.Locators.numero_icecream == 2
 
     def test_click_pedir_taxi_final(self):
         self.routes_page.click_pedir_un_taxi_final()

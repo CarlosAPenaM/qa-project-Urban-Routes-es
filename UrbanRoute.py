@@ -10,13 +10,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
-
 class UrbanRoutesPage:
 
     def __init__(self, driver):
         self.driver = driver
         self.locators = Locators
-
 
     def set_from(self, from_address):
         WebDriverWait(self.driver,10).until(
@@ -56,11 +54,12 @@ class UrbanRoutesPage:
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.element_to_be_clickable(Locators.phone_number_field)).click()
         wait.until(EC.element_to_be_clickable(Locators.phone_number_field_popup)).send_keys(phone_number)
+        value = self.driver.find_element(*self.locators.phone_number_field_popup).get_property('value')
         wait.until(EC.element_to_be_clickable(Locators.phone_number_field_button)).click()
-
         phone_code = helper.retrieve_phone_code(self.driver)
         wait.until(EC.element_to_be_clickable(Locators.codigo_sms_field)).send_keys(phone_code)
-        wait.until(EC.element_to_be_clickable(Locators.Confirmar_button)).click()
+        wait.until(EC.element_to_be_clickable(Locators.confirmar_button)).click()
+        return value
         
     def open_payment_method_popup(self):
         WebDriverWait(self.driver, 10).until(
@@ -123,6 +122,3 @@ class UrbanRoutesPage:
     def click_pedir_un_taxi_final(self):
         WebDriverWait(self.driver, 20).until(
             EC.visibility_of_element_located(Locators.pedir_un_taxi_last_button)).click()
-    
-
-
